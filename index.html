@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Foto Kotak Bergerak Acak</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      overflow: hidden;
+    }
+    .photo {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background-size: cover;
+      background-position: center;
+      border-radius: 8px;
+      will-change: transform;
+    }
+  </style>
+</head>
+<body>
+     <div class="absolute inset-0 flex items-center justify-center z-50">
+    <h1 class="text-white text-4xl font-bold">Halo JELEKKKKKKK!</h1>
+  </div>
+  <script>
+    const NUM_PHOTOS = 1000; // jumlah foto
+    const PHOTO_URL = 'PHOTO.jpg'; // path foto
+
+    const photos = [];
+    const velocities = [];
+
+    for (let i = 0; i < NUM_PHOTOS; i++) {
+      const el = document.createElement('div');
+      el.className = 'photo';
+      el.style.backgroundImage = `url('${PHOTO_URL}')`;
+      el.style.left = `${Math.random() * window.innerWidth}px`;
+      el.style.top = `${Math.random() * window.innerHeight}px`;
+      document.body.appendChild(el);
+      
+      photos.push(el);
+      velocities.push({
+        x: (Math.random() - 0.5) * 2, // kecepatan horizontal
+        y: (Math.random() - 0.5) * 2, // kecepatan vertikal
+        r: (Math.random() - 0.5) * 2  // rotasi
+      });
+    }
+
+    function animate() {
+      for (let i = 0; i < NUM_PHOTOS; i++) {
+        const el = photos[i];
+        const vel = velocities[i];
+        let x = parseFloat(el.style.left);
+        let y = parseFloat(el.style.top);
+
+        x += vel.x;
+        y += vel.y;
+
+        // pantul di tepi layar
+        if (x <= 0 || x >= window.innerWidth - 60) vel.x *= -1;
+        if (y <= 0 || y >= window.innerHeight - 60) vel.y *= -1;
+
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+
+        // rotasi
+        el.style.transform = `rotate(${(performance.now() / 10 + vel.r * 100) % 360}deg)`;
+      }
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
